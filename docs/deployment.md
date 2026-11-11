@@ -3,7 +3,7 @@
 **Date:** 2026-10-02 · Distribution channel is a **pending user decision** (D-13 sibling); the build is designed to satisfy Google Play requirements so no option is closed.
 
 ## 1. Toolchain (pinned; verify at Phase 3 start)
-Gradle wrapper 9.8.0 · AGP 9.4.1 · Kotlin 2.4.20 · KSP 2.3.12 · JDK toolchain 21 (Temurin; JDK 22 on the dev machine also works) · compileSdk 37 · targetSdk 36 · minSdk 29 · build-tools 37.0.0.
+Gradle wrapper 9.8.0 · AGP 9.4.1 · Kotlin 2.4.20 · KSP 2.3.12 · JDK toolchain 21 (Temurin; JDK 22 on the dev machine also works) · compileSdk 37 · targetSdk 36 · minSdk 26 · build-tools 37.0.0.
 
 ## 2. Local development setup (Windows)
 ```bash
@@ -90,4 +90,4 @@ SemVer `versionName` (`0.x` until v1.0); `versionCode` = `major*1_000_000 + mino
    [podium-music-player.vercel.app](https://podium-music-player.vercel.app/).
 
 ## 8. Release checklist (Phase 12)
-License audit complete (`docs/licenses.md`) · About screen attributions generated · Privacy notice published · README with screenshots · Known limitations documented · Baseline profiles regenerated · All phase-exit device checklists passed on API 29, 33, 36, 37 · Version bumped, changelog written · Signed artifacts' SHA-256 published.
+License audit complete (`docs/licenses.md`) · About screen attributions generated · Privacy notice published · README with screenshots · Known limitations documented · Baseline profiles regenerated · All phase-exit device checklists passed on API 26, 29, 33, 36, 37 · Version bumped, changelog written · Signed artifacts' SHA-256 published.

@@ -6,7 +6,7 @@
 | Class | Example | Role |
 |---|---|---|
 | Mid-range (budget target) | Pixel 6a / Galaxy A5x (API 33+, 60–120 Hz) | All budgets must pass here |
-| Low-end floor | API 29–30 device, 3–4 GB RAM | Solid tier; must remain smooth |
+| Low-end floor | API 26–30 device, 3–4 GB RAM | Solid tier; must remain smooth |
 | High-end | Recent Pixel/Galaxy | Full tier at 120 Hz |
 
 ## 2. Budgets

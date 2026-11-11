@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 /** Single source of truth for platform levels (decision D-01). */
 internal object Sdk {
     const val COMPILE = 37
-    const val MIN = 29
+    const val MIN = 26
     const val TARGET = 36
 }
 

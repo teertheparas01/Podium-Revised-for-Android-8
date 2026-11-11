@@ -24,10 +24,10 @@ Every significant decision, newest at the bottom. Major ones have an ADR in `adr
 ## Inline decisions
 
 ### D-01 · SDK levels
-- **Decision:** minSdk 29, targetSdk 36, compileSdk 37.
-- **Context:** Play requires target 36 (since 2026-08-31). API 37 is current. Glass tiers depend on 31/33.
+- **Decision:** minSdk 26, targetSdk 36, compileSdk 37.
+- **Context:** Android 8.0 (API 26) support is required. Play requires target 36 (since 2026-08-31). API 37 is current. Glass tiers depend on 31/33.
 - **Options:** minSdk 26 / 29 / 31.
-- **Chosen:** 29. **Why:** scoped-storage-only (one storage model), `Typeface.CustomFallbackBuilder`, system dark theme, reliable `MediaStore` columns; drops only Android 8/9. **Tradeoffs:** a few % of active devices excluded; API 29–30 get the Solid glass tier. **Future:** target 37 after verifying Android 17 behaviour changes in Phase 10.
+- **Chosen:** 26. API 26–28 use `READ_EXTERNAL_STORAGE` and the legacy `MediaStore.DATA` path for local music folders; API 29+ uses scoped storage and `RELATIVE_PATH`. API 26–30 render the Solid glass tier. **Tradeoffs:** Android 8/9 devices are supported with a legacy storage path. **Future:** target 37 after verifying Android 17 behaviour changes in Phase 10.
 
 ### D-02 · No Material3 dependency
 - **Decision:** depend on Compose foundation/ui only. **Context:** Material's ripple/shape/color leak into custom systems. **Options:** M3 themed heavily / M3 for a few widgets / none. **Chosen:** none. **Why:** enforceable visual purity; our component set is small. **Tradeoffs:** we build text fields, sheets, menus on foundation (`BasicTextField`, `Popup`, custom sheet). **Future:** can add `material3-adaptive` (layout-only, no visuals) for window size classes if useful.

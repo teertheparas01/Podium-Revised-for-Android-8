@@ -19,7 +19,7 @@ Glass must be restrained (HIG), performant, accessible, and degrade gracefully. 
    |---|---|---|
    | `Full` | API 33+, transparency = Full, not power-save, thermal < SEVERE | vibrancy → blur → lens refraction + rim highlight + shadow |
    | `Blur` | API 31–32, or power-save/thermal fallback | vibrancy → blur + rim + shadow |
-   | `Solid` | API 29–30, or user transparency = Off | opaque tinted surface + hairline rim + shadow (no backdrop capture at all) |
+   | `Solid` | API 26–30, or user transparency = Off | opaque tinted surface + hairline rim + shadow (no backdrop capture at all) |
    User setting **Transparency: Full / Reduced / Off** (`Reduced` = `Blur` tier with +20% tint opacity).
 4. **No Material3 components.** Compose foundation + ui only; Podium components are built from tokens. (Material3 stays out of the dependency graph to prevent its ripple, shapes, and colors leaking in.)
 5. **State is never glass-only.** Focus, selection, and disabled states are also conveyed by text weight/color, glyph fill, and semantics.
@@ -28,7 +28,7 @@ Glass must be restrained (HIG), performant, accessible, and degrade gracefully. 
 Centralisation makes restraint enforceable (a lint rule bans `Modifier.blur`, `RenderEffect`, and Backdrop imports outside `:core:designsystem`). Tiers turn the accessibility fallback and the old-device fallback into the same, well-tested code path.
 
 ## Tradeoffs
-API 29–30 users get the solid tier (still designed, not degraded-looking). Dependency on a single-maintainer library — contained by the wrapper.
+API 26–30 users get the solid tier (still designed, not degraded-looking). Dependency on a single-maintainer library — contained by the wrapper.
 
 ## Future implications
 A custom AGSL engine can replace Backdrop behind the same API. Tier selection can incorporate frame-time telemetry (auto-downgrade after sustained jank) in Phase 10.

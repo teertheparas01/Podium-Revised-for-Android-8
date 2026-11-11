@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
@@ -146,6 +147,7 @@ class LocalMusicSource(context: Context, private val scope: CoroutineScope) : Mu
     }
 
     private fun scan(): List<Track> {
+        val api29 = Build.VERSION.SDK_INT >= 29
         val api30 = Build.VERSION.SDK_INT >= 30
         val projection = buildList {
             addAll(
@@ -154,9 +156,10 @@ class LocalMusicSource(context: Context, private val scope: CoroutineScope) : Mu
                     MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID,
                     MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.TRACK, MediaStore.Audio.Media.YEAR,
                     MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.SIZE,
-                    MediaStore.MediaColumns.RELATIVE_PATH,
                 ),
             )
+            // RELATIVE_PATH was added in Android 10. Android 8/9 expose the file path instead.
+            add(if (api29) MediaStore.MediaColumns.RELATIVE_PATH else MediaStore.MediaColumns.DATA)
             if (api30) {
                 addAll(
                     listOf(
@@ -192,7 +195,11 @@ class LocalMusicSource(context: Context, private val scope: CoroutineScope) : Mu
                         mimeType = c.string(MediaStore.Audio.Media.MIME_TYPE),
                         bitrate = if (api30) c.int(MediaStore.Audio.Media.BITRATE) else null,
                         sizeBytes = c.long(MediaStore.Audio.Media.SIZE),
-                        relativePath = c.string(MediaStore.MediaColumns.RELATIVE_PATH),
+                        relativePath = if (api29) {
+                            c.string(MediaStore.MediaColumns.RELATIVE_PATH)
+                        } else {
+                            legacyRelativePath(c.string(MediaStore.MediaColumns.DATA))
+                        },
                     )
                 }
             }
@@ -206,6 +213,15 @@ class LocalMusicSource(context: Context, private val scope: CoroutineScope) : Mu
             .sortedBy { it.path.lowercase() }
         val selection = _selection.value
         return rows.filter { selection.includes(it.relativePath.orEmpty()) }.map(LocalTrackMapper::toTrack)
+    }
+
+    /** Convert Android 8/9's absolute MediaStore path to the folder-relative form used by settings. */
+    private fun legacyRelativePath(dataPath: String?): String? {
+        val root = Environment.getExternalStorageDirectory().absolutePath.trimEnd('/')
+        val path = dataPath?.replace('\\', '/') ?: return null
+        val relativeFile = path.removePrefix("$root/").takeIf { path.startsWith("$root/") } ?: return null
+        val folder = relativeFile.substringBeforeLast('/', missingDelimiterValue = "")
+        return if (folder.isEmpty()) "" else "$folder/"
     }
 
     private fun loadSelection(): FolderSelection {

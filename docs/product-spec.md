@@ -107,7 +107,7 @@ All of: coherent architecture per `architecture.md`; every P0 row above implemen
 | A1 | Native Android is the intended platform (ADR-001). |
 | A2 | English-only UI for v1; metadata can be any script. Localisation-ready strings from day one. |
 | A3 | Single user, single device; no Podium account or cloud service. |
-| A4 | minSdk 29 (Android 10). Glass fidelity scales with API level (ADR-007). |
+| A4 | minSdk 26 (Android 8.0). Legacy MediaStore paths support local music folders before scoped storage; glass fidelity scales with API level (ADR-007). |
 | A5 | Podium's own source code license is undecided → all rights reserved until the user chooses. Factual GPL-3.0 notices respected on BitChord/extractor components. |
 | A6 | Sideloaded personal Android application (D-48). |
 
