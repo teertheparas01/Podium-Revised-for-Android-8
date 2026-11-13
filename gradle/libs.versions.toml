@@ -5,6 +5,7 @@ coroutines = "1.11.0"
 serialization = "1.11.0"
 collectionsImmutable = "0.5.2"
 composeBom = "2026.09.00"
+composeDesktop = "1.5.14"
 activityCompose = "1.13.0"
 coreKtx = "1.19.1"
 lifecycle = "2.11.0"
@@ -26,6 +27,10 @@ turbine = "1.2.1"
 androidxTestCore = "1.7.0"
 androidxTestExtJunit = "1.3.0"
 androidxTestRunner = "1.7.0"
+webview2 = "1.0.3065.39"
+graaljs = "24.1.1"
+jna = "5.14.0"
+winrt = "1.7.0"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -84,6 +89,19 @@ androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTes
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 
+# Desktop libraries
+compose-desktop-ui = { module = "org.jetbrains.compose.desktop:ui", version.ref = "composeDesktop" }
+compose-desktop-ui-tooling = { module = "org.jetbrains.compose.desktop:ui-tooling", version.ref = "composeDesktop" }
+compose-desktop-runtime = { module = "org.jetbrains.compose.desktop:runtime", version.ref = "composeDesktop" }
+compose-desktop-navigation = { module = "org.jetbrains.compose.desktop:navigation", version.ref = "composeDesktop" }
+compose-desktop-window-size = { module = "org.jetbrains.compose.desktop:window-size-class", version.ref = "composeDesktop" }
+webview2 = { module = "com.microsoft.webview2:webview2", version.ref = "webview2" }
+graaljs = { module = "org.graalvm.js:js", version.ref = "graaljs" }
+graaljs-scriptengine = { module = "org.graalvm.js:js-scriptengine", version.ref = "graaljs" }
+jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
+winrt = { module = "com.microsoft.winrt:winrt", version.ref = "winrt" }
+
 # Build-logic only
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -97,6 +115,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room3 = { id = "androidx.room3", version.ref = "room3" }
+compose-desktop = { id = "org.jetbrains.compose.desktop", version.ref = "composeDesktop" }
 podium-jvm-library = { id = "podium.jvm.library" }
 podium-android-library = { id = "podium.android.library" }
 podium-android-compose = { id = "podium.android.compose" }

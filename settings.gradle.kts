@@ -4,6 +4,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://packages.jetbrains.team/maven/p/compose/dev") }
     }
 }
 
@@ -13,6 +14,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = java.net.URI.create("https://jitpack.io") }
+        maven { url = uri("https://packages.jetbrains.team/maven/p/compose/dev") }
+        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
+        maven { url = uri("https://nexus.gluonhq.com/nexus/content/repositories/releases/") }
     }
 }
 
@@ -43,4 +47,7 @@ include(":app")
 
 // Isolated POC tools
 include(":tools:newpipe-poc")
+
+// Desktop modules
+include(":desktopApp")
 
