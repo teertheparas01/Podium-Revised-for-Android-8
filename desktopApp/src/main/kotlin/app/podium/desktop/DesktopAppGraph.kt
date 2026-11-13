@@ -1,11 +1,15 @@
 package app.podium.desktop
 
-import app.podium.core.common.Clock
 import app.podium.core.common.DefaultClock
+import app.podium.core.common.Clock
+import app.podium.core.common.Outcome
+import app.podium.core.common.PodiumError
 import app.podium.core.lyrics.FileLyricsCache
 import app.podium.core.lyrics.LrclibProvider
 import app.podium.core.lyrics.LyricsRepository
 import app.podium.core.lyrics.LyricsAttribution
+import app.podium.core.lyrics.LrcParser
+import app.podium.core.lyrics.LyricsFormatter
 import app.podium.core.lyrics.UrlConnectionLyricsHttp
 import app.podium.core.model.SourceId
 import app.podium.player.api.AutoplayEngine
@@ -39,7 +43,7 @@ import java.util.concurrent.Executors
  * 4. Enable in Settings UI
  */
 class DesktopAppGraph(
-    val coroutineScope: CoroutineScope,
+    val coroutineScope: kotlinx.coroutines.CoroutineScope,
     val clock: Clock = DefaultClock,
 ) {
     
@@ -74,7 +78,7 @@ class DesktopAppGraph(
     val lyricsHttp by lazy {
         app.podium.core.lyrics.UrlConnectionLyricsHttp(
             userAgent = "Podium/0.1.0 (Desktop; +https://github.com/GHOSTxASR/podium-music-player)",
-            executor = Executors.newCachedThreadPool { r -> Thread(r, "podium-lyrics-io").apply { isDaemon = true } }
+            executor = java.util.concurrent.Executors.newCachedThreadPool { r -> Thread(r, "podium-lyrics-io").apply { isDaemon = true } }
         )
     }
     
@@ -210,7 +214,7 @@ class DesktopAppGraph(
 companion object {
     @Volatile private var INSTANCE: DesktopAppGraph? = null
     
-    fun initialize(coroutineScope: CoroutineScope): DesktopAppGraph {
+    fun initialize(coroutineScope: kotlinx.coroutines.CoroutineScope): DesktopAppGraph {
         return INSTANCE ?: synchronized(this) {
             INSTANCE ?: DesktopAppGraph(coroutineScope).also { INSTANCE = it }
         }

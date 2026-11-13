@@ -15,17 +15,17 @@ import java.util.concurrent.ConcurrentHashMap
  * Tracks health state of each music source for circuit breaker pattern.
  */
 class DesktopSourceHealthMonitor(
-    private val clock: app.podium.core.common.Clock,
+    private val clock: Clock,
 ) {
     
-    private val healthStates = ConcurrentHashMap<app.podium.core.model.SourceId, app.podium.sources.api.SourceHealth>()
+    private val healthStates = ConcurrentHashMap<SourceId, app.podium.sources.api.SourceHealth>()
     private val mutex = Mutex()
     
     /**
      * Checks if a source can be attempted for a request.
      * Returns false if the source is rate limited or unreachable.
      */
-    fun canAttempt(sourceId: app.podium.core.model.SourceId): Boolean {
+    fun canAttempt(sourceId: SourceId): Boolean {
         val health = healthStates[sourceId] ?: return true
         return health.isAttemptAllowed
     }
@@ -33,7 +33,7 @@ class DesktopSourceHealthMonitor(
     /**
      * Records a health outcome for a source.
      */
-    fun record(sourceId: app.podium.core.model.SourceId, outcome: app.podium.sources.api.HealthOutcome, retryAfterMillis: Long? = null) {
+    fun record(sourceId: SourceId, outcome: app.podium.sources.api.HealthOutcome, retryAfterMillis: Long? = null) {
         mutex.withLock {
             val current = healthStates[sourceId] ?: app.podium.sources.api.SourceHealth.Healthy
             val updated = when {
@@ -56,14 +56,14 @@ class DesktopSourceHealthMonitor(
     /**
      * Gets the current health state of a source.
      */
-    fun health(sourceId: app.podium.core.model.SourceId): app.podium.sources.api.SourceHealth {
+    fun health(sourceId: SourceId): app.podium.sources.api.SourceHealth {
         return healthStates[sourceId] ?: app.podium.sources.api.SourceHealth.Healthy
     }
     
     /**
      * Resets health state for a source (e.g., after manual retry).
      */
-    fun reset(sourceId: app.podium.core.model.SourceId) {
+    fun reset(sourceId: SourceId) {
         healthStates.remove(sourceId)
     }
 }

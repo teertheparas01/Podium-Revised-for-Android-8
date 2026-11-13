@@ -32,13 +32,13 @@ class MiniPlayerView(
     
     fun createView(): Node {
         val root = HBox(12.0)
-        root.padding = javafx.geometry.Insets(8.0, 16.0, 8.0, 16.0)
+        root.padding = Insets(8.0, 16.0, 8.0, 16.0)
         root.style = "-fx-background-color: #1a1a2e; -fx-border-color: #333; -fx-border-width: 1 0 0 0;"
         root.alignment = Pos.CENTER_LEFT
         
         // Artwork placeholder
-        val artwork = javafx.scene.shape.Rectangle(56.0, 56.0)
-        artwork.fill = javafx.scene.paint.Color.web("#333")
+        val artwork = Rectangle(56.0, 56.0)
+        artwork.fill = Color.web("#333")
         artwork.arcWidth = 8.0
         artwork.arcHeight = 8.0
         
@@ -73,7 +73,7 @@ class MiniPlayerView(
         HBox.setHgrow(spacer, Priority.ALWAYS)
         
         val root = HBox(12.0)
-        root.padding = javafx.geometry.Insets(8.0, 16.0, 8.0, 16.0)
+        root.padding = Insets(8.0, 16.0, 8.0, 16.0)
         root.style = "-fx-background-color: #1a1a2e; -fx-border-color: #333; -fx-border-width: 1 0 0 0;"
         root.alignment = Pos.CENTER_LEFT
         root.children.addAll(artwork, trackInfo, controls, progressBar, volumeSlider, spacer)

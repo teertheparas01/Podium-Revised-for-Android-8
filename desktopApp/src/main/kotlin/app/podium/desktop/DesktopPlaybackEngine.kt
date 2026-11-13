@@ -2,13 +2,14 @@ package app.podium.desktop
 
 import app.podium.core.common.Outcome
 import app.podium.core.common.PodiumError
+import app.podium.core.model.QueueUid
+import app.podium.core.model.Track
 import app.podium.core.model.TrackId
 import app.podium.player.api.PlaybackController
 import app.podium.player.api.PlayIntent
 import app.podium.player.api.PlaybackSnapshot
 import app.podium.player.api.PlaybackStatus
 import app.podium.player.api.QueueManager
-import app.podium.player.api.QueueUid
 import app.podium.player.api.QueueView
 import app.podium.player.api.RepeatMode
 import app.podium.sources.api.FacetResolution
@@ -35,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference
 class DesktopPlaybackEngine(
     private val scope: CoroutineScope,
     private val registry: SourceRegistry,
-    private val resolver: StreamResolver,
+    private val resolver: app.podium.sources.api.resolve.StreamResolver,
     private val queueManager: QueueManager,
 ) : PlaybackController {
     
@@ -45,8 +46,8 @@ class DesktopPlaybackEngine(
     private val _queue = MutableStateFlow<QueueView>(QueueView.Empty)
     override val queue: StateFlow<QueueView> = _queue.asStateFlow()
     
-    private val mediaPlayerRef = AtomicReference<MediaPlayer?>(null)
-    private val currentItemRef = AtomicReference<QueueItem?>(null)
+    private val mediaPlayerRef = java.util.concurrent.atomic.AtomicReference<MediaPlayer?>(null)
+    private val currentItemRef = java.util.concurrent.atomic.AtomicReference<QueueItem?>(null)
     private val positionUpdater = scope.launch(Dispatchers.Main) { updatePositionLoop() }
     
     private data class QueueItem(
@@ -55,12 +56,14 @@ class DesktopPlaybackEngine(
         val media: PlayableMedia,
     )
     
+    private val playbackState = MutableStateFlow<PlaybackStatus>(PlaybackStatus.Idle)
+    
     init {
         // Subscribe to queue changes
         scope.launch {
             queueManager.state.collect { q ->
                 _queue.value = QueueView(
-                    entries = q.items.map { it to QueueItem(it.uid, it.track.id, it.selection!!.media) },
+                    entries = q.items.map { it to it.uid to it.track.id to it.selection!!.media },
                     currentIndex = q.currentIndex,
                     shuffleEnabled = q.shuffleEnabled,
                     repeatMode = q.repeatMode,
@@ -69,10 +72,7 @@ class DesktopPlaybackEngine(
             }
         }
         
-        // Subscribe to queue manager's current item changes
-        scope.launch {
-            // TODO: Hook into queue manager's current item changes
-        }
+        // TODO: Subscribe to queue manager's current item changes
     }
     
     private fun playMedia(media: PlayableMedia) {
@@ -240,7 +240,7 @@ class DesktopPlaybackEngine(
     }
 }
 
-private fun QueueItem.toNowPlayingItem(): app.podium.player.api.NowPlayingItem {
+private fun app.podium.desktop.DesktopPlaybackEngine.QueueItem.toNowPlayingItem(): app.podium.player.api.NowPlayingItem {
     return app.podium.player.api.NowPlayingItem(
         uid = uid,
         trackId = trackId,
@@ -255,11 +255,11 @@ private fun QueueItem.toNowPlayingItem(): app.podium.player.api.NowPlayingItem {
     )
 }
 
-private fun PlayableMedia.toTrack(): app.podium.core.model.Track {
+private fun PlayableMedia.toTrack(): Track {
     // TODO: implement
-    return app.podium.core.model.Track(
-        id = app.podium.core.model.TrackId(app.podium.core.model.SourceId("local"), uri),
-        source = app.podium.core.model.SourceRef(app.podium.core.model.SourceId("local"), uri),
+    return Track(
+        id = TrackId(SourceId("local"), uri),
+        source = SourceRef(SourceId("local"), uri),
         title = "",
         artists = emptyList(),
     )

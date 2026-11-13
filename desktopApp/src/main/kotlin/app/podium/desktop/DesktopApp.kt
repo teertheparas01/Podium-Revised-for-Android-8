@@ -1,6 +1,5 @@
 package app.podium.desktop
 
-import app.podium.core.common.Clock
 import app.podium.core.common.DefaultClock
 import app.podium.core.lyrics.LyricsRepository
 import app.podium.core.model.SourceId
@@ -18,8 +17,8 @@ import javafx.beans.binding.Bindings
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.layout.*
-import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
+import javafx.scene.paint.Color
 import javafx.stage.Stage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,13 +38,15 @@ import javafx.scene.shape.Rectangle
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
+import javafx.geometry.Insets
+import javafx.geometry.Pos
 
 /**
  * Podium Desktop - JavaFX Application Entry Point
  */
 class DesktopApp : Application() {
     
-    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val coroutineScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + Dispatchers.Main)
     private lateinit var appGraph: DesktopAppGraph
     private var primaryStage: Stage? = null
     
@@ -85,8 +86,8 @@ class DesktopApp : Application() {
         primaryStage.show()
     }
     
-    private fun createTopBar(): HBox {
-        val topBar = HBox(16.0)
+    private fun createTopBar(): javafx.scene.layout.HBox {
+        val topBar = javafx.scene.layout.HBox(16.0)
         topBar.padding = Insets(12.0, 16.0, 12.0, 16.0)
         topBar.style = "-fx-background-color: #1a1a2e;"
         topBar.alignment = Pos.CENTER_LEFT
@@ -100,7 +101,7 @@ class DesktopApp : Application() {
         searchField.style = "-fx-background-color: #2a2a4a; -fx-text-fill: white; -fx-prompt-text-fill: #888;"
         
         val spacer1 = Region()
-        HBox.setHgrow(spacer1, Priority.ALWAYS)
+        javafx.scene.layout.HBox.setHgrow(spacer1, Priority.ALWAYS)
         
         val settingsBtn = Button("⚙")
         settingsBtn.style = "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18px;"
@@ -110,16 +111,16 @@ class DesktopApp : Application() {
         return topBar
     }
     
-    private fun createLibraryView(): ScrollPane {
+    private fun createLibraryView(): javafx.scene.Node {
         val libraryView = LibraryView(appGraph)
         val scrollPane = ScrollPane()
         scrollPane.content = libraryView.createView()
-        scrollPane.fitToWidth = true
+        scrollPane.setFitToWidth(true)
         scrollPane.style = "-fx-background: transparent; -fx-background-color: transparent;"
         return scrollPane
     }
     
-    private fun createMiniPlayer(): HBox {
+    private fun createMiniPlayer(): javafx.scene.layout.HBox {
         val miniPlayer = MiniPlayerView(appGraph.playbackController, appGraph.volumeController)
         return miniPlayer.createView()
     }

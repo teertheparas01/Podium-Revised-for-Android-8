@@ -1,7 +1,7 @@
 package app.podium.desktop
 
-import app.podium.core.common.Clock
 import app.podium.core.common.DefaultClock
+import app.podium.core.common.Clock
 import app.podium.core.model.SourceId
 import app.podium.player.api.PlaybackController
 import app.podium.sources.api.SourceDescriptor
@@ -18,7 +18,6 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.layout.Region
-import javafx.scene.layout.ScrollPane
 import javafx.scene.layout.Priority
 import javafx.scene.shape.Rectangle
 import javafx.scene.paint.Color
@@ -115,7 +114,7 @@ class LibraryView(
         
         val scrollPane = ScrollPane()
         scrollPane.content = centerBox
-        scrollPane.fitToWidth = true
+        scrollPane.setFitToWidth(true)
         scrollPane.style = "-fx-background: transparent; -fx-background-color: transparent;"
         
         return scrollPane

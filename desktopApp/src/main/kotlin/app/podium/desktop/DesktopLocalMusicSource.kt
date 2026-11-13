@@ -90,7 +90,7 @@ class DesktopLocalMusicSource(
     }
     
     override val descriptor = SourceDescriptor(
-        id = app.podium.core.model.SourceId(SOURCE_ID),
+        id = SourceId(SOURCE_ID),
         displayName = "On this device",
         providerName = "Local file system",
         basis = Basis.LOCAL_DEVICE,
@@ -98,7 +98,7 @@ class DesktopLocalMusicSource(
     )
     
     private val _capabilities = kotlinx.coroutines.flow.MutableStateFlow(computeCapabilities())
-    override val capabilities: kotlinx.coroutines.flow.StateFlow<SourceCapabilities> = _capabilities.asStateFlow()
+    override val capabilities: kotlinx.coroutines.flow.StateFlow<app.podium.sources.api.SourceCapabilities> = _capabilities.asStateFlow()
     
     private val _tracks = kotlinx.coroutines.flow.MutableStateFlow<List<Track>>(emptyList())
     val tracksState: kotlinx.coroutines.flow.StateFlow<List<Track>> = _tracks.asStateFlow()
@@ -112,8 +112,8 @@ class DesktopLocalMusicSource(
         // Initial scan
     }
     
-    private fun computeCapabilities(): SourceCapabilities {
-        return SourceCapabilities.available(
+    private fun computeCapabilities(): app.podium.sources.api.SourceCapabilities {
+        return app.podium.sources.api.SourceCapabilities.available(
             Capability.SEARCH,
             Capability.BROWSE,
             Capability.LIBRARY,
@@ -225,15 +225,15 @@ class DesktopLocalMusicSource(
             val album = (meta["album"] as? String) ?: "Unknown Album"
             val durationMs = (meta["duration"] as? javafx.util.Duration)?.toMillis()?.toLong() ?: 0L
             
-            val trackId = TrackId.of(app.podium.core.model.SourceId(SOURCE_ID), path.toString())
-            val sourceRef = SourceRef(app.podium.core.model.SourceId(SOURCE_ID), path.toString())
+            val trackId = TrackId.of(SourceId(SOURCE_ID), path.toString())
+            val sourceRef = SourceRef(SourceId(SOURCE_ID), path.toString())
             
             val track = Track(
                 id = trackId,
                 source = sourceRef,
                 title = title,
                 artists = listOf(app.podium.core.model.ArtistCredit(artist)),
-                album = app.podium.core.model.AlbumRef(album, AlbumId.of(app.podium.core.model.SourceId(SOURCE_ID), album)),
+                album = app.podium.core.model.AlbumRef(album, app.podium.core.model.AlbumId.of(SourceId(SOURCE_ID), album)),
                 durationMs = durationMs,
                 kind = MediaKind.SONG,
             )
@@ -294,7 +294,7 @@ class DesktopLocalMusicSource(
             return Outcome.Success(SearchResults(tracks = hits.take(query.limit)))
         }
         
-        override suspend fun track(ref: SourceRef): Outcome<Track> =
+        override suspend fun track(ref: app.podium.sources.api.SourceRef): Outcome<Track> =
             _tracks.value.firstOrNull { it.source.providerKey == ref.providerKey }
                 ?.let { Outcome.Success(it) }
                 ?: Outcome.Failure(PodiumError.NotFound(ref.providerKey))
@@ -363,12 +363,12 @@ class DesktopLocalMusicSource(
     
     override val folders: FolderFacet = object : FolderFacet {
         override fun folders() = kotlinx.coroutines.flow.flowOf(
-            musicFolders.map { MusicFolder(it.absolutePath, 0) }
+            musicFolders.map { app.podium.sources.api.MusicFolder(it.absolutePath, 0) }
         )
         
-        override val selection = kotlinx.coroutines.flow.MutableStateFlow(FolderSelection.Default).asStateFlow()
+        override val selection = kotlinx.coroutines.flow.MutableStateFlow(app.podium.sources.api.FolderSelection.Default).asStateFlow()
         
-        override fun select(selection: FolderSelection) {
+        override fun select(selection: app.podium.sources.api.FolderSelection) {
             // TODO: Persist folder selection
         }
     }
